@@ -2,6 +2,8 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { Container } from "@/components/Container";
+import { Input } from "@/components/Input/inder";
+
 import { IGameProps } from "@/utils/types/game";
 
 import { BsArrowRightSquare } from "react-icons/bs";
@@ -49,6 +51,7 @@ const Home = async () => {
             </div>
           </section>
         </Link>
+        <Input />
       </Container>
     </main>
   );
