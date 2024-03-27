@@ -4,6 +4,53 @@ import { IGameProps } from "@/utils/types/game";
 import Image from "next/image";
 import { redirect } from "next/navigation";
 import { GameCard } from "@/components/GameCard";
+import { Metadata } from "next";
+
+interface IPropsParams {
+  params: {
+    id: string;
+  };
+}
+
+export const generateMetadata = async ({
+  params,
+}: IPropsParams): Promise<Metadata> => {
+  try {
+    const response: IGameProps = await fetch(
+      `${process.env.NEXT_API_URL}/next-api/?api=game&id=${params.id}`,
+      { next: { revalidate: 60 } }
+    )
+      .then((res) => res.json())
+      .catch(() => {
+        return {
+          title: "DalyGames - Descubra jogos incrívis para se divertido",
+        };
+      });
+
+    return {
+      title: response.title,
+      description: `${response.description.slice(0, 100)}...`,
+      openGraph: {
+        title: response.title,
+        images: [response.image_url],
+      },
+      robots: {
+        index: true,
+        follow: true,
+        nocache: true,
+        googleBot: {
+          index: true,
+          follow: true,
+          noimageindex: true,
+        },
+      },
+    };
+  } catch (err) {
+    return {
+      title: "DalyGames - Descubra jogos incrívis para se divertido",
+    };
+  }
+};
 
 export const getData = async (id: string) => {
   try {
